@@ -30,12 +30,12 @@ App.jsx                 # shared state + layout
 | `App` | `transactions`, `categories` | — |
 | `Summary` | derived totals (computed) | `transactions` |
 | `TransactionForm` | form fields | `categories`, `onAddTransaction` |
-| `TransactionList` | filter state | `transactions`, `categories` |
+| `TransactionList` | filter state | `transactions`, `categories`, `onDeleteTransaction` |
 
 ### Data flow
 
 - **Read path:** `App` passes `transactions` down to `Summary` and `TransactionList`
-- **Write path:** `TransactionForm` calls `onAddTransaction(transaction)` → `App` updates `transactions`
+- **Write path:** `TransactionForm` calls `onAddTransaction(transaction)` → `App` updates `transactions`; `TransactionList` calls `onDeleteTransaction(id)` → `App` removes the transaction
 - **Local UI state** stays in the component that uses it (form inputs, filters)
 
 When adding features, extend the existing component that owns that concern. Only lift state to `App` when multiple siblings need it.
@@ -63,7 +63,7 @@ Categories: `food`, `housing`, `utilities`, `transport`, `entertainment`, `salar
 
 - One component per file in `src/`, default export, PascalCase filename
 - Use `useState` for local state; extract custom hooks only when logic is reused
-- Pass callbacks down for mutations (`onAddTransaction`), data down for display
+- Pass callbacks down for mutations (`onAddTransaction`, `onDeleteTransaction`), data down for display
 - Match existing naming: camelCase for variables/functions, kebab-case for CSS classes
 - Prefer minimal, readable diffs over large refactors
 - Run `npm run lint` after substantive changes
