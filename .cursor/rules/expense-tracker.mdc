@@ -1,53 +1,76 @@
 ---
-description: Core conventions for the React expense tracker starter
+description: Core conventions and architecture for the React expense tracker
 alwaysApply: true
 ---
 
 # Expense Tracker Project
 
-React + Vite expense tracker starter. Keep changes focused and match existing patterns.
+React + Vite expense tracker. Keep changes focused and match existing patterns.
 
 ## Stack
 
 - React 19 with functional components and hooks
 - Vite 7 (ES modules, `npm run dev` on port 5173)
 - Plain JavaScript/JSX — no TypeScript unless explicitly requested
-- Component styles in colocated `.css` files (e.g. `App.css`)
+- Shared styles in `App.css`; global styles in `index.css`
+
+## Architecture
+
+```
+App.jsx                 # shared state + layout
+├── Summary.jsx         # income/expense/balance cards
+├── TransactionForm.jsx # add-transaction form
+└── TransactionList.jsx # filters + transactions table
+```
+
+### State ownership
+
+| Component | Owns | Receives via props |
+|-----------|------|--------------------|
+| `App` | `transactions`, `categories` | — |
+| `Summary` | derived totals (computed) | `transactions` |
+| `TransactionForm` | form fields | `categories`, `onAddTransaction` |
+| `TransactionList` | filter state | `transactions`, `categories` |
+
+### Data flow
+
+- **Read path:** `App` passes `transactions` down to `Summary` and `TransactionList`
+- **Write path:** `TransactionForm` calls `onAddTransaction(transaction)` → `App` updates `transactions`
+- **Local UI state** stays in the component that uses it (form inputs, filters)
+
+When adding features, extend the existing component that owns that concern. Only lift state to `App` when multiple siblings need it.
 
 ## Project Structure
 
 ```
 src/
-  main.jsx    # entry point
-  App.jsx     # main app component
-  App.css     # app styles
-  index.css   # global styles
+  main.jsx              # entry point
+  App.jsx               # root component, shared state
+  Summary.jsx           # summary cards
+  TransactionForm.jsx   # add transaction form
+  TransactionList.jsx   # filtered transaction table
+  App.css               # component styles
+  index.css             # global styles
 ```
 
 ## Domain Model
 
-Transactions have: `id`, `description`, `amount`, `type` (`"income"` | `"expense"`), `category`, `date`.
+Transactions: `id`, `description`, `amount` (number), `type` (`"income"` | `"expense"`), `category`, `date`.
 
 Categories: `food`, `housing`, `utilities`, `transport`, `entertainment`, `salary`, `other`.
 
 ## Coding Conventions
 
+- One component per file in `src/`, default export, PascalCase filename
 - Use `useState` for local state; extract custom hooks only when logic is reused
-- Prefer minimal, readable diffs over large refactors
+- Pass callbacks down for mutations (`onAddTransaction`), data down for display
 - Match existing naming: camelCase for variables/functions, kebab-case for CSS classes
+- Prefer minimal, readable diffs over large refactors
 - Run `npm run lint` after substantive changes
-
-## Known Starter Issues
-
-This is a course starter with intentional bugs and rough UI. When fixing:
-
-- `amount` is stored as a string — coerce to number before math (`Number()` or `parseFloat()`)
-- Verify income/expense totals and balance calculations after changes
-- Improve UI incrementally; keep the app functional at each step
 
 ## What to Avoid
 
 - Adding dependencies without a clear need
 - Converting to TypeScript or adding a backend unless asked
-- Over-abstracting (no premature component splits or utility libraries)
+- Moving filter/form state up to `App` unless another component needs it
 - Creating commits unless the user explicitly requests them
