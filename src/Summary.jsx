@@ -1,3 +1,12 @@
+function formatMoney(value) {
+  return value.toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  });
+}
+
 function Summary({ transactions }) {
   const totalIncome = transactions
     .filter(t => t.type === "income")
@@ -8,22 +17,27 @@ function Summary({ transactions }) {
     .reduce((sum, t) => sum + t.amount, 0);
 
   const balance = totalIncome - totalExpenses;
+  const balanceTone = balance >= 0 ? "is-positive" : "is-negative";
 
   return (
-    <div className="summary">
-      <div className="summary-card">
-        <h3>Income</h3>
-        <p className="income-amount">${totalIncome}</p>
+    <section className="summary" aria-label="Account summary">
+      <div className={`balance-ribbon ${balanceTone}`}>
+        <div className="balance-ribbon-main">
+          <p className="summary-label">Available balance</p>
+          <p className="balance-amount">{formatMoney(balance)}</p>
+        </div>
+        <div className="balance-ribbon-side">
+          <div className="summary-metric">
+            <p className="summary-label">Income</p>
+            <p className="income-amount">{formatMoney(totalIncome)}</p>
+          </div>
+          <div className="summary-metric">
+            <p className="summary-label">Expenses</p>
+            <p className="expense-amount">{formatMoney(totalExpenses)}</p>
+          </div>
+        </div>
       </div>
-      <div className="summary-card">
-        <h3>Expenses</h3>
-        <p className="expense-amount">${totalExpenses}</p>
-      </div>
-      <div className="summary-card">
-        <h3>Balance</h3>
-        <p className="balance-amount">${balance}</p>
-      </div>
-    </div>
+    </section>
   );
 }
 

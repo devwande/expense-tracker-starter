@@ -24,26 +24,56 @@ function SpendingChart({ transactions }) {
 
   if (chartData.length === 0) {
     return (
-      <div className="spending-chart">
-        <h2>Spending by Category</h2>
-        <p className="chart-empty">No expenses to display.</p>
-      </div>
+      <section className="panel spending-chart">
+        <div className="panel-header">
+          <h2>Spending by category</h2>
+          <p className="panel-lede">Where expenses concentrate this period.</p>
+        </div>
+        <p className="empty-state">No expenses to display yet. Add a spending entry to see the chart.</p>
+      </section>
     );
   }
 
   return (
-    <div className="spending-chart">
-      <h2>Spending by Category</h2>
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={chartData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
-          <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
-          <XAxis dataKey="category" />
-          <YAxis />
-          <Tooltip formatter={(value) => [`$${value}`, "Spent"]} />
-          <Bar dataKey="amount" fill="#e74c3c" barSize={40} />
+    <section className="panel spending-chart">
+      <div className="panel-header">
+        <h2>Spending by category</h2>
+        <p className="panel-lede">Where expenses concentrate this period.</p>
+      </div>
+      <ResponsiveContainer width="100%" height={280}>
+        <BarChart data={chartData} margin={{ top: 8, right: 8, left: 0, bottom: 4 }}>
+          <CartesianGrid stroke="var(--line-soft)" strokeDasharray="4 6" vertical={false} />
+          <XAxis
+            dataKey="category"
+            tick={{ fill: "var(--ink-muted)", fontSize: 12, fontFamily: "var(--font-body)" }}
+            axisLine={{ stroke: "var(--line)" }}
+            tickLine={false}
+          />
+          <YAxis
+            tick={{ fill: "var(--ink-muted)", fontSize: 12, fontFamily: "var(--font-mono)" }}
+            axisLine={false}
+            tickLine={false}
+            width={48}
+          />
+          <Tooltip
+            cursor={{ fill: "rgba(13, 115, 119, 0.06)" }}
+            contentStyle={{
+              background: "var(--surface-raised)",
+              border: "1px solid var(--line)",
+              borderRadius: 8,
+              boxShadow: "var(--shadow)",
+              fontFamily: "var(--font-body)",
+            }}
+            labelStyle={{ color: "var(--ink)", fontWeight: 600 }}
+            formatter={(value) => [
+              `$${Number(value).toLocaleString("en-US")}`,
+              "Spent",
+            ]}
+          />
+          <Bar dataKey="amount" fill="var(--coral)" radius={[6, 6, 0, 0]} barSize={36} />
         </BarChart>
       </ResponsiveContainer>
-    </div>
+    </section>
   );
 }
 

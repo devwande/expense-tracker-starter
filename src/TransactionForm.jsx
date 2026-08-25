@@ -26,33 +26,50 @@ function TransactionForm({ categories, onAddTransaction }) {
   };
 
   return (
-    <div className="add-transaction">
-      <h2>Add Transaction</h2>
+    <section className="panel add-transaction">
+      <div className="panel-header">
+        <h2>Add transaction</h2>
+        <p className="panel-lede">Log income or spending in one pass.</p>
+      </div>
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <input
-          type="number"
-          placeholder="Amount"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-        />
-        <select value={type} onChange={(e) => setType(e.target.value)}>
-          <option value="income">Income</option>
-          <option value="expense">Expense</option>
-        </select>
-        <select value={category} onChange={(e) => setCategory(e.target.value)}>
-          {categories.map(cat => (
-            <option key={cat} value={cat}>{cat}</option>
-          ))}
-        </select>
-        <button type="submit">Add</button>
+        <label className="field field-grow">
+          <span>Description</span>
+          <input
+            type="text"
+            placeholder="e.g. Groceries"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </label>
+        <label className="field field-amount">
+          <span>Amount</span>
+          <input
+            type="number"
+            placeholder="0"
+            min="0"
+            step="0.01"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+          />
+        </label>
+        <label className="field">
+          <span>Type</span>
+          <select value={type} onChange={(e) => setType(e.target.value)}>
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+          </select>
+        </label>
+        <label className="field">
+          <span>Category</span>
+          <select value={category} onChange={(e) => setCategory(e.target.value)}>
+            {categories.map(cat => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+          </select>
+        </label>
+        <button type="submit" className="btn-primary">Add transaction</button>
       </form>
-    </div>
+    </section>
   );
 }
 
