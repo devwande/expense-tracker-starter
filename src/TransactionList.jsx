@@ -59,7 +59,11 @@ function TransactionList({ transactions, categories, onDeleteTransaction }) {
       </div>
 
       {filteredTransactions.length === 0 ? (
-        <p className="empty-state">No transactions match these filters. Clear a filter to see more.</p>
+        <p className="empty-state">
+          {transactions.length === 0
+            ? "No transactions yet. Add one above to start the ledger."
+            : "No transactions match these filters. Clear a filter to see more."}
+        </p>
       ) : (
         <div className="table-wrap">
           <table>

@@ -8,12 +8,14 @@ function TransactionForm({ categories, onAddTransaction }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!description || !amount) return;
+    const trimmed = description.trim();
+    const value = Number(amount);
+    if (!trimmed || !Number.isFinite(value) || value <= 0) return;
 
     onAddTransaction({
       id: Date.now(),
-      description,
-      amount: Number(amount),
+      description: trimmed,
+      amount: value,
       type,
       category,
       date: new Date().toISOString().split('T')[0],
@@ -39,6 +41,7 @@ function TransactionForm({ categories, onAddTransaction }) {
             placeholder="e.g. Groceries"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            required
           />
         </label>
         <label className="field field-amount">
@@ -46,10 +49,11 @@ function TransactionForm({ categories, onAddTransaction }) {
           <input
             type="number"
             placeholder="0"
-            min="0"
+            min="0.01"
             step="0.01"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
+            required
           />
         </label>
         <label className="field">
